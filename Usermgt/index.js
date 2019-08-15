@@ -29,7 +29,7 @@ app.use(bodyParser.json());
  
 
 // Connect to Mongoose and set connection variable
-mongoose.connect('mongodb://localhost/user', { useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/users', { useNewUrlParser: true});
 var db = mongoose.connection;
 
 // Added check for DB connection
