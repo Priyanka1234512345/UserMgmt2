@@ -16,13 +16,13 @@ router.route('/user')
     .get(userController.index)
     .post(userController.new);
 
-router.route('/userupdate')
-    .post(userController.updates);
+// router.route('/userupdate')
+//     .post(userController.updates);
 
 router.route('/user/:user_id')
     .get(userController.view)
     // .post(contactController.update)
-    // .put(contactController.update)
+    .put(userController.update)
     .delete(userController.delete);
 // Export API routes
 module.exports = router;

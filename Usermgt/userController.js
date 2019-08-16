@@ -3,19 +3,19 @@
 const User = require('./userModel');
 // Handle index actions
 exports.index = function (req, res) {
-    User.get(function (err, users) {
-        if (err) {
-            res.json({
-                status: "error",
-                message: err,
-            });
-        }
+
+    User.find().then(users => {
         res.json({
             status: "success",
             message: "users retrieved successfully",
             data: users
         });
-    });
+    }).catch(err => {
+        res.json({
+            status: "error",
+            message: err,
+        });
+    })
 };
 // Handle create contact actions
 exports.new = function (req, res) {
@@ -25,44 +25,46 @@ exports.new = function (req, res) {
     user.gender = req.body.gender;
     user.email = req.body.email;
     user.phone = req.body.phone;
-// save the contact and check for errors
+    // save the contact and check for errors
     user.save(function (err) {
         if (err) res.json(err);
-        else{
+        else {
             res.json({
-            message: 'New user created!',
-            data: user
-        });
+                message: 'New user created!',
+                data: user
+            });
         }
     });
 };
 
-exports.updates=function(req,res){
+exports.updates = function (req, res) {
     console.log(req.body)
-    User.findOne(
-     {_id:req.body._id},
-     
-   (err,data)=>{
-        if(err) return res.json({"err":err});
-             else 
-             {
-                
-        data.name =req.body.name;
-        data.gender=req.body.gender
-        data.email=req.body.email,
-         data.phone=req.body.phone
-   data.save(function (err) {
-        if (err) res.json(err);
-        else{
-            res.json({
-            message: ' user updated!',
-            data: data
+    User.findOne({
+            _id: req.body._id
+        },
+
+        (err, data) => {
+            if (err) return res.json({
+                "err": err
+            });
+            else {
+
+                data.name = req.body.name;
+                data.gender = req.body.gender
+                data.email = req.body.email,
+                data.phone = req.body.phone
+                data.save(function (err) {
+                    if (err) res.json(err);
+                    else {
+                        res.json({
+                            message: ' user updated!',
+                            data: data
+                        });
+                    }
+                });
+            }
         });
-        }
-    });
-             }
-    });
- };
+};
 
 
 
@@ -77,22 +79,26 @@ exports.view = function (req, res) {
         });
     });
 };
- exports.update = function (req, res) {
-     let name=req.body.name;
-     console.log(req.body.phone);
- User.update(
-     {name:name},
-     {
-        name:req.body.name,
-        gender:req.body.gender,
-        email:req.body.email,
-         phone:req.body.phone
-   },
-   (err,data)=>{
-        if(err) return res.json({"err":err});
-             else return res.json({"res":data});
-    });
- };
+exports.update = function (req, res) {
+    let id = req.params.user_id;
+    console.log(req.body.phone);
+    User.update({
+            "_id":id
+        }, {
+            name: req.body.name,
+            gender: req.body.gender,
+            email: req.body.email,
+            phone: req.body.phone
+        },
+        (err, data) => {
+            if (err) return res.json({
+                "err": err
+            });
+            else return res.json({
+                "res": data
+            });
+        });
+};
 
 //  Product.findByIdAndUpdate(req.params.contactId, {
 //         name: req.body.name || "No product title", 
@@ -125,10 +131,9 @@ exports.delete = function (req, res) {
     }, function (err, user) {
         if (err)
             res.send(err);
-res.json({
+        res.json({
             status: "success",
             message: 'User deleted'
         });
     });
 };
- 
